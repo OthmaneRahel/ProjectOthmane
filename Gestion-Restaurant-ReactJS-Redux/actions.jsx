@@ -1,24 +1,24 @@
-export const addIng = (id,ingredient) => ({
-    type: 'ADD_INGREDIENT',
-    payload: { id,ingredient}
-});
-export const deleteIng = (id) =>({
-    type : 'DELETE_INGREDIENT',
-    payload : id
+export const addmenu = (menu)=>({
+    type : 'ADD_MENU',
+    payload : menu
 })
-export const ajouterR = (recette)=>({
-    type : 'add_reccette',
-    payload : recette
+export const addclient = (client)=>({
+    type : 'ADD_CLIENT',
+    payload : client,
 })
-export const modifier = (rec)=>({
-    type : 'modifier_rec',
-    payload : rec
+export const addorders = (orders)=>({
+    type : 'ADD_ORDERS',
+    payload : orders
 })
-export const supprimerIng = (nom) => ({
-    type: 'SUPPRIMER_INGREDIENT',
-    payload: { nom }
-});
-export const supprimerRecette = (id) => ({
-    type: 'SUPPRIMER_RECETTE',
-    payload: id,
+export const deleteclient = (idclient)=>({
+    type : 'DELETE_CLIENT',
+    payload : idclient
+})
+export const updateclient = (id,updatevalclient)=>({
+    type : 'UPDATE_CLIENT',
+    payload : {id,updatevalclient}
+})
+export const addtopanier = (element)=>({
+    type : 'ADD_PANIER',
+    payload : element
 })
