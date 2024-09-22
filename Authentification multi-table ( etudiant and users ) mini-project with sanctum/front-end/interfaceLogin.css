@@ -1,0 +1,40 @@
+@media only screen and (max-width: 599px) {
+    .divlogin {
+        position: absolute;
+        bottom: 40px;
+        width: 90%;
+        left: -90px;
+    }
+    .bag-img{
+        opacity: 0.8;
+        filter: blur(5px);
+    }
+}
+@media only screen and (min-width: 600px) and (max-width: 899px) {
+    .divlogin {
+        position: absolute;
+        bottom: 40px;
+        width: 90%;
+        left: -90px;
+    }
+    .bag-img{
+        opacity: 0.8;
+        filter: blur(5px);
+    }
+}
+
+
+
+/* @media (max-width: 599px) {
+     Styles pour les petits écrans (téléphones)
+} */
+
+/* @media (min-width: 600px) and (max-width: 899px) {
+    Styles pour les tablettes
+} */
+
+/* @media (min-width: 900px) {
+    Styles pour les PC et écrans plus larges
+} */
+
+
