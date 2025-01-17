@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="interfaceLogin.css">
+    <link rel="icon" href="logo.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <script>
+        async function getData() {
+            let response =  await fetch("https://dummyjson.com/users");
+            let res = await response.json();
+            return res.users;
+        }
+         async function Se_connecter() {
+            try{
+                let users = await getData();
+                let email = document.getElementById("email").value;            
+                let password = document.getElementById("password").value;
+                let connecte = localStorage.getItem("connecte");
+                let userConn = false;
+                if(email !="" && password !=""){
+                    for( i=0 ; i < users.length ; i++ ){
+                        if( users[i].email == email && users[i].password == password){
+                            connecte = localStorage.setItem("connecte",true)
+                            localStorage.setItem("user_connecte",JSON.stringify(users[i]))
+                            userConn = true;
+                            window.location.href = "./Acceuil.html"
+                        }
+                    }
+                    if(!userConn){
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                            Toast.fire({
+                            icon: "error",
+                            title: "Votre Email ou Mot de passe est incorrecte , Veuillez Ressayer",
+                        });
+                    }
+                }else{
+                    alert("Verifier les champs vides");
+                }
+            }catch(error){
+                console.error(error);
+            }
+        }
+    </script>
+    <div id="content">
+        <label for="">Email :</label><br>
+        <input type="email" name="" id="email"><br>
+        <br>
+        <label for="">Password :</label><br>
+        <input type="password" id="password"><br>
+        <br>
+        <button type="button" onclick="Se_connecter()">Se connecter</button>      
+    </div>
+</body>
+</html>

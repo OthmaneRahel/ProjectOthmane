@@ -1,0 +1,232 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Panier</title>
+        <link rel="stylesheet" href="panier.css">
+        <link rel="icon" href="logo.jpg">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+    </head>
+    <body>
+        <div class="navbar">
+            <div id="user_connecte">
+                <a href="./Acceuil.html"><img src="logo.jpg" alt=""></a>
+                <a href="./Acceuil.html">Acceuil</a>
+                <a href="./interfaceProducts.html">Nos Produits</a>
+                <a href="./Services.html">Services</a>
+                <a href="./panier.html"> Votre Panier</a>
+                <img src="" alt="" id="image_user">
+                <button type="button" id="deconnect_button"></button>
+            </div>
+        </div>
+        <div class="b">
+            <table border="1" id="tableau">
+                <th>Image</th>
+                <th>Title</th>
+                <th>Quantité</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Action</th>
+            </table>
+            <a href="javaScript:history.back()">Retour</a>
+            <button type="button" id="butt">Commander maintenant !</button>
+        </div>
+    
+        <div id="Affichage_comm" style="display: none;">
+                <div id="modal">
+                    <i class="fa-regular fa-circle-xmark" id="icon-close"></i>
+                    <h1>Voulez-vous confirmer votre commande </h1>
+                    <table border="1" id="tab_comm"></table>
+                    <strong id="total"></strong>
+                    <button type="button" id="pdf">Download Your PDF</button>
+                </div>
+        </div>
+        <div id="footer">
+            <div id="content-footer">
+                <h1>A Propos</h1>
+                <p>Bienvenue sur Votre Boutique Quotidienne, votre destination en ligne pour découvrir une large gamme de produits de qualité. Nous sommes passionnés par l'idée de rendre vos achats plus simples, plus rapides et plus agréables. Que vous recherchiez des articles pour votre maison, des vêtements tendance, ou des gadgets technologiques, notre boutique est conçue pour répondre à tous vos besoins.
+                    Nous nous engageons à offrir une expérience utilisateur exceptionnelle, des prix compétitifs et un service client à votre écoute. Grâce à une interface intuitive et des options de livraison rapides, nous sommes là pour vous accompagner à chaque étape de votre achat. Votre satisfaction est notre priorité absolue !</p>
+            </div>
+            <div id="content-footer">
+                <h1>Notre Localisation</h1>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3325.457145877439!2d-7.673547913475051!3d33.54149699380112!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda62cc30d54b92d%3A0x4c1926b0ee0c8126!2sEMSI%20Les%20orangers!5e0!3m2!1sfr!2sma!4v1735487856341!5m2!1sfr!2sma" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+        <script>
+            let butt_desc = document.getElementById("deconnect_button");
+            let ele = document.getElementById("user_connecte");
+            const bEle = document.createElement("b");
+            const user_conn = JSON.parse(localStorage.getItem("user_connecte"));
+                if (user_conn != null) {
+                    let imgEle = document.getElementById("image_user").src = user_conn.image;
+                    bEle.textContent = "Bonjour "+user_conn.firstName +" "+ user_conn.lastName 
+                    ele.appendChild(bEle);
+                    butt_desc.textContent = "Deconnexion";
+                    butt_desc.onclick = () =>{
+                        localStorage.removeItem("user_connecte");
+                        let connecte = localStorage.setItem("connecte",false)
+                        window.location.reload();
+                    };
+                }else{
+                    butt_desc.textContent = "Connexion";
+                    butt_desc.onclick = () =>{
+                        window.location.href = "./interfaceLogin.html";
+                    };
+                }
+            let panier = JSON.parse(localStorage.getItem("panier")) || [];
+            let tableEle = document.getElementById("tableau");
+            if(panier.length != 0){
+                for (let i = 0; i < panier.length; i++) {
+                    let trEle = document.createElement("tr");
+                    let td_1_Ele = document.createElement("td");
+                    let imgEle = document.createElement("img")
+                    let td_2_Ele = document.createElement("td");
+                    let td_3_Ele = document.createElement("td");
+                    let inputEle = document.createElement("input")
+                    inputEle.type = "number";
+                    inputEle.min = 0;
+                    inputEle.id = "quantite_prod"
+                    inputEle.placeholder = "Quantité..."
+                    inputEle.style.width = "80%"
+                    let td_4_Ele = document.createElement("td");
+                    let td_5_Ele = document.createElement("td");
+                    let td_6_Ele = document.createElement("td");
+                    let btnEle = document.createElement("button");
+                    btnEle.textContent = "X";
+                    td_6_Ele.appendChild(btnEle)
+                    btnEle.onclick = () =>{
+                        panier.splice(i,1);
+                        panier = localStorage.setItem("panier",JSON.stringify(panier))
+                        window.location.reload();
+                    }
+                    imgEle.src = panier[i].image;
+                    imgEle.style.width = "100px";
+                    td_1_Ele.appendChild(imgEle)
+                    td_2_Ele.textContent = panier[i].title;
+                    td_3_Ele.appendChild(inputEle);
+                    td_4_Ele.textContent = panier[i].price;
+                    td_5_Ele.textContent = panier[i].category;
+                    trEle.appendChild(td_1_Ele)
+                    trEle.appendChild(td_2_Ele)
+                    trEle.appendChild(td_3_Ele)
+                    trEle.appendChild(td_4_Ele)
+                    trEle.appendChild(td_5_Ele)
+                    trEle.appendChild(td_6_Ele)
+                    tableEle.appendChild(trEle)
+                }
+            }else{
+                let trEle = document.createElement("tr");
+                let tdEle = document.createElement("td");
+                tdEle.colSpan = "7";
+                tdEle.textContent= "Aucun Produit dans le panier"
+                tdEle.style.textAlign = "center";
+                trEle.append(tdEle)
+                tableEle.appendChild(trEle)
+            }
+            let butt_comm = document.getElementById("butt");
+            let user_connecte = localStorage.getItem("connecte");
+            if(user_connecte == "true"){
+                let commandeProd = []
+                let TabComm = document.getElementById("tab_comm");
+                butt_comm.onclick = () =>{
+                    let qteProd = document.querySelectorAll("#quantite_prod");
+                    for (let i = 0; i < panier.length; i++) {
+                        commandeProd.push({image:panier[i].image,nom_produit:panier[i].title,quantite:qteProd[i].value,prix_prod:panier[i].price})
+                    }
+                    let total_a_payer = commandeProd.reduce((total,co)=>{
+                         return total + (co.prix_prod * parseInt(co.quantite));
+                    },0)
+                    let divComm = document.getElementById("Affichage_comm");
+                    let divComm_2 = document.getElementById("modal");
+                    for (let i = 0; i < commandeProd.length; i++) {
+                        let trEle = document.createElement("tr");
+                        trEle.id = "trele"
+                        trEle.name = "trele"
+                        trEle.className = "trele"
+                        let td_1_Ele = document.createElement("td");
+                        let imgEle = document.createElement("img")
+                        let td_2_Ele = document.createElement("td");
+                        let td_3_Ele = document.createElement("td");
+                        let td_4_Ele = document.createElement("td");
+                        imgEle.src = commandeProd[i].image;
+                        imgEle.style.width = "100px";
+                        td_1_Ele.appendChild(imgEle)
+                        td_2_Ele.textContent = commandeProd[i].nom_produit;
+                        td_3_Ele.textContent = "X "+commandeProd[i].quantite;
+                        td_4_Ele.textContent = commandeProd[i].prix_prod;
+                        trEle.appendChild(td_1_Ele)
+                        trEle.appendChild(td_2_Ele)
+                        trEle.appendChild(td_3_Ele)
+                        trEle.appendChild(td_4_Ele)
+                        TabComm.appendChild(trEle)
+                    }
+                    divComm.style.display = "block"
+                    document.getElementById("total").innerHTML = "Le total A Payer = "+total_a_payer.toFixed(2)+" $";
+                    let button_pdf = document.getElementById('pdf');
+                    button_pdf.onclick = () =>{
+                        Swal.fire({
+                        title: "Vous Etes Sur?",
+                        text: "Voulez-vous Confirmer Votre Commande!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Oui, Confimer Ma Commande!"
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                            const { jsPDF } = window.jspdf;
+                            const doc = new jsPDF();
+                            doc.text(10, 50, `Bonjour ${user_conn.firstName} ${user_conn.lastName},`);
+                            doc.text(10, 60, `Votre Numero de Telephone : ${user_conn.phone}`);
+                            const par1 = `Bienvenue dans notre boutique en ligne !`;
+                            const par2 = `Nous sommes heureux de vous offrir une sélection de produits de qualité.`;
+                            doc.text(10, 70, par1);
+                            doc.text(10, 80, par2);
+                            doc.text(10, 90, 'Merci pour votre commande. Voici les détails :');
+                            doc.autoTable({
+                                head: [['Nom Produit', 'Quantité','Prix Produit']],
+                                body: commandeProd.map(commande => [commande.nom_produit, commande.quantite, commande.prix_prod]),
+                                startY: 100
+                            });
+                            doc.text(10, doc.lastAutoTable.finalY + 10, `Total à payer : ${total_a_payer.toFixed(2)} €`);
+                            doc.save(`Commande de ${user_conn.firstName + " " + user_conn.lastName}.pdf`);
+                            localStorage.setItem("commande",JSON.stringify(commandeProd))
+                            localStorage.removeItem("panier")
+                            Swal.fire({
+                            title: "Confirmé!",
+                            text: "Votre Commande a été Passé Avec Succèss.",
+                            icon: "success"
+                            });
+                        }
+                        });
+                    }
+                    console.log(TabComm)
+                    console.log(commandeProd)
+                    let button_close = document.getElementById("icon-close");
+                    button_close.addEventListener("click",function(){
+                        commandeProd = []
+                        divComm.style.display = "none";
+                        let trEles = document.querySelectorAll("#trele");
+                        for(i=0;i<trEles.length;i++){
+                            TabComm.removeChild(trEles[i])
+                        }
+                        localStorage.removeItem("commande")
+                    })  
+                }
+            }else{
+                butt_comm.onclick = () =>{
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Vous Deverez etre connecté pour confirmer votre commande !",
+                        footer: '<a href="./interfaceLogin.html">Cliquez Ici Pour Se Connecter ?</a>'
+                    });
+                }
+            }
+        </script>
+    </body>
+    </html>

@@ -1,0 +1,31 @@
+body{
+    background-color: blanchedalmond;
+}
+#content{
+    background-color: rgb(255, 255, 255);
+    max-width: 400px;
+    padding: 25px;
+    box-shadow: 2px 2px 3px 4px;
+    text-align: center;
+    border-radius: 20px;
+    margin: 190px auto;
+}
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+input{
+    padding: 6px;
+    width: 90%;
+    border :none;
+    background-color: gainsboro;
+    opacity: 10px;
+    border-radius: 2px;
+    padding: 10px;
+}

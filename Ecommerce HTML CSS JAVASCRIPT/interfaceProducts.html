@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits</title>
+    <link rel="stylesheet" href="interfaceProducts.css">
+    <link rel="icon" href="logo.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div id="user_connecte">
+            <a href="./Acceuil.html"><img src="logo.jpg" alt=""></a>
+            <a href="./Acceuil.html">Acceuil</a>
+            <a href="./interfaceProducts.html">Nos Produits</a>
+            <a href="./Services.html">Services</a>
+            <a href="./panier.html"> Votre Panier</a>
+            <img src="" alt="" id="image_user">
+            <button type="button" id="deconnect_button"></button>
+        </div>
+    </div>
+    <div>
+        <h3 style="padding: 20px;" id="list_p">liste produits </h3>
+        <div id="produits"></div>
+    </div>
+    <div id="footer">
+        <div id="content-footer">
+            <h1>A Propos</h1>
+            <p>Bienvenue sur Votre Boutique Quotidienne, votre destination en ligne pour découvrir une large gamme de produits de qualité. Nous sommes passionnés par l'idée de rendre vos achats plus simples, plus rapides et plus agréables. Que vous recherchiez des articles pour votre maison, des vêtements tendance, ou des gadgets technologiques, notre boutique est conçue pour répondre à tous vos besoins.
+                Nous nous engageons à offrir une expérience utilisateur exceptionnelle, des prix compétitifs et un service client à votre écoute. Grâce à une interface intuitive et des options de livraison rapides, nous sommes là pour vous accompagner à chaque étape de votre achat. Votre satisfaction est notre priorité absolue !</p>
+        </div>
+        <div id="content-footer">
+            <h1>Notre Localisation</h1>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3325.457145877439!2d-7.673547913475051!3d33.54149699380112!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda62cc30d54b92d%3A0x4c1926b0ee0c8126!2sEMSI%20Les%20orangers!5e0!3m2!1sfr!2sma!4v1735487856341!5m2!1sfr!2sma" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+    <script>
+        let butt_desc = document.getElementById("deconnect_button");
+        let ele = document.getElementById("user_connecte");
+        const bEle = document.createElement("b");
+        const user_conn = JSON.parse(localStorage.getItem("user_connecte"));
+            if (user_conn != null) {
+                let imgEle = document.getElementById("image_user").src = user_conn.image;
+                bEle.textContent = "Bonjour "+  user_conn.firstName  + " " + user_conn.lastName  
+                ele.appendChild(bEle);
+                butt_desc.textContent = "Deconnexion";
+                butt_desc.onclick = () =>{
+                    localStorage.removeItem("user_connecte");
+                    let connecte = localStorage.setItem("connecte",false)
+                    window.location.reload()
+            };
+        }else{
+            butt_desc.textContent = "Connexion";
+            butt_desc.onclick = () =>{
+                window.location.href = "./interfaceLogin.html";
+            };
+        }
+        let panier = [];
+        let apiRequestProduct = new XMLHttpRequest();
+        let products = [];
+        apiRequestProduct.open("GET","https://fakestoreapi.com/products");
+        apiRequestProduct.onreadystatechange = () =>{
+            if(apiRequestProduct.status == 200 && apiRequestProduct.readyState === 4){
+                products = JSON.parse(apiRequestProduct.response);
+                let prodEle = document.getElementById("produits");
+                for (let i = 0; i < products.length; i++) {
+                    let divProduct = document.createElement("div");
+                    let infoProd = document.createElement("div");
+                    infoProd.style.cursor = "pointer";
+                    divProduct.id = "prod";
+                    infoProd.onclick = () => {
+                        let produitchoisi = localStorage.setItem("prod_choisi",JSON.stringify(products[i]))
+                        window.location.href = './detailProduct.html';
+                    }
+                    let imageEle = document.createElement("img");
+                    let nomEle = document.createElement("strong");
+                    let prixEle = document.createElement("strong");
+                    let br = document.createElement("br");
+                    let buttonEle = document.createElement("button");
+                    infoProd.appendChild(imageEle)
+                    infoProd.appendChild(nomEle)
+                    infoProd.appendChild(prixEle)
+                    infoProd.appendChild(br);
+                    buttonEle.type = "button";
+                    buttonEle.textContent = "Ajouter Au Panier";
+                    buttonEle.onclick = () =>{
+                        if(!panier.includes(products[i])){
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                                });
+                                Toast.fire({
+                                icon: "success",
+                                title: "Produit a été bien ajouté au panier",
+                            });
+                            let produit_existe = JSON.parse(localStorage.getItem("panier")) || []; 
+                            panier = [...produit_existe,products[i]]
+                            localStorage.setItem("panier",JSON.stringify(panier))
+                            
+                        }else{
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                                });
+                                Toast.fire({
+                                icon: "error",
+                                title: "Produit est deja ajouté au panier",
+                            });
+                        }
+                    }
+                    imageEle.src = products[i].image;
+                    imageEle.style.width = '10%';
+                    nomEle.textContent = products[i].title;
+                    prixEle.textContent = products[i].price + " $";
+                    divProduct.appendChild(infoProd)
+                    divProduct.appendChild(buttonEle);
+                    prodEle.appendChild(divProduct)
+                }
+            }
+        }
+        apiRequestProduct.send();
+    </script>
+</body>
+</html>

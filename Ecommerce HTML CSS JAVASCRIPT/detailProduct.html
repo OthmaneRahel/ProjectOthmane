@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produit Détails</title>
+    <link rel="icon" href="logo.jpg">
+    <link rel="stylesheet" href="detailProduct.css">
+
+</head>
+<body>
+    <div class="container">
+        <h1 id="product-title"></h1>
+        <img id="product-image" class="product-image" src="" alt="Produit Image">
+        <div class="price" id="product-price"></div>
+        <p class="description" id="product-description"></p>
+        <div class="category" id="product-category"></div>
+        <a href="javascript:history.back()" class="back-button">Retour</a>
+    </div>
+    <script>
+        let prodChoisi = JSON.parse(localStorage.getItem("prod_choisi"));
+        if (prodChoisi) {
+            document.getElementById("product-title").textContent = prodChoisi.title;
+            document.getElementById("product-image").src = prodChoisi.image;
+            document.getElementById("product-price").textContent = `$${prodChoisi.price}`;
+            document.getElementById("product-description").textContent = prodChoisi.description;
+            document.getElementById("product-category").textContent = `Catégorie: ${prodChoisi.category}`;
+        } else {
+            document.body.innerHTML = "<h1>Aucun produit sélectionné</h1>";
+        }
+    </script>
+</body>
+</html>
